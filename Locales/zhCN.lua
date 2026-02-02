@@ -3,7 +3,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MiliUI_ChatBar", "zhCN")
 if not L then return end
 
 -- Addon Name
-L["ADDON_NAME"] = "MiliUI 快捷聊天栏"
+L["ADDON_NAME"] = "MiliUI 聊天栏"
 L["ADDON_TITLE"] = "快捷聊天栏"
 
 -- Settings Categories

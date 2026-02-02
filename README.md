@@ -17,8 +17,8 @@ A simple and lightweight chat channel quick-access bar addon for World of Warcra
 ## Usage
 
 - **Left-click** on a channel button to switch to that chat channel
-- **Right-click** on a background to open the context menu
-- Use **Edit Mode** (Esc > HUD Edit Mode) to drag and reposition the chat bar
+- **Right-click** on background area to open the context menu
+- Use **Edit Mode** (Esc > Edit Mode) to drag and reposition the chat bar
 
 ## Contributing
 
@@ -101,8 +101,8 @@ Contributions are welcome! Feel free to submit pull requests to help improve thi
 ## 사용 방법
 
 - 채널 버튼을 **좌클릭**하여 해당 채팅 채널로 전환
-- 버튼을 **우클릭**하여 버튼바를 우클릭하여 컨텍스트 메뉴 열기
-- **편집 모드** (Esc > HUD 편집 모드)를 사용하여 버튼바를 드래그하여 재배치
+- 버튼바를 **우클릭**하여 컨텍스트 메뉴 열기
+- **편집 모드** (Esc > 편집 모드)를 사용하여 버튼바를 드래그하여 재배치
 
 ## 기여하기
 

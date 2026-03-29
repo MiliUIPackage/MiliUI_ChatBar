@@ -28,6 +28,10 @@ L["TOGGLE_ORIENTATION"] = "세로/가로 전환"
 L["TOGGLE_ORIENTATION_DESC"] = "세로 및 가로 레이아웃 간 전환"
 L["FONT_SIZE"] = "글꼴 크기"
 L["FONT_SIZE_DESC"] = "채팅 바 버튼의 글꼴 크기 조절"
+L["BUTTON_WIDTH"] = "버튼 너비"
+L["BUTTON_WIDTH_DESC"] = "채팅 바 색상 블록의 너비 조절"
+L["BUTTON_HEIGHT"] = "버튼 높이"
+L["BUTTON_HEIGHT_DESC"] = "채팅 바 색상 블록의 높이 조절"
 L["RESET_ALL"] = "모든 설정 초기화"
 L["RESET_ALL_DESC"] = "모든 설정을 기본값으로 초기화"
 L["CONFIRM_RESET_ALL"] = "모든 설정을 초기화하시겠습니까?"
@@ -87,6 +91,9 @@ L["DBM_PULL_SECONDS_DESC"] = "DBM 풀 타이머 카운트다운 초 설정 (우�
 
 -- Dialogs
 L["CONFIRM_RELOAD"] = "인터페이스를 다시 불러오시겠습니까?"
+
+-- Skip Reload Confirm
+L["SKIP_RELOAD_CONFIRM"] = "재시작 확인 건너뛰기"
 
 
 

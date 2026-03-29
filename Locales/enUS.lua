@@ -27,6 +27,10 @@ L["TOGGLE_ORIENTATION"] = "Toggle Vertical/Horizontal"
 L["TOGGLE_ORIENTATION_DESC"] = "Switch between vertical and horizontal layout"
 L["FONT_SIZE"] = "Font Size"
 L["FONT_SIZE_DESC"] = "Adjust the font size of ChatBar buttons"
+L["BUTTON_WIDTH"] = "Button Width"
+L["BUTTON_WIDTH_DESC"] = "Adjust the width of ChatBar color blocks"
+L["BUTTON_HEIGHT"] = "Button Height"
+L["BUTTON_HEIGHT_DESC"] = "Adjust the height of ChatBar color blocks"
 L["RESET_ALL"] = "Reset All Settings"
 L["RESET_ALL_DESC"] = "Reset all settings to default"
 L["CONFIRM_RESET_ALL"] = "Are you sure you want to reset all settings?"
@@ -86,6 +90,9 @@ L["DBM_PULL_SECONDS_DESC"] = "Set the countdown seconds for DBM pull timer (righ
 
 -- Dialogs
 L["CONFIRM_RELOAD"] = "Are you sure you want to reload the UI?"
+
+-- Skip Reload Confirm
+L["SKIP_RELOAD_CONFIRM"] = "Skip reload confirmation"
 
 
 

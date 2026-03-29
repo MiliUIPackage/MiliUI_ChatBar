@@ -3,7 +3,7 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MiliUI_ChatBar", "zhTW")
 if not L then return end
 
 -- Addon Name
-L["ADDON_NAME"] = "MiliUI 聊天列"
+L["ADDON_NAME"] = "MiliUI 快捷聊天列"
 L["ADDON_TITLE"] = "快捷聊天列"
 
 -- Settings Categories
@@ -28,6 +28,10 @@ L["TOGGLE_ORIENTATION"] = "切換垂直/水平"
 L["TOGGLE_ORIENTATION_DESC"] = "在垂直與水平佈局之間切換"
 L["FONT_SIZE"] = "字體大小"
 L["FONT_SIZE_DESC"] = "調整 ChatBar 按鈕的字體大小"
+L["BUTTON_WIDTH"] = "按鈕寬度"
+L["BUTTON_WIDTH_DESC"] = "調整 ChatBar 按鈕著色方塊的寬度"
+L["BUTTON_HEIGHT"] = "按鈕高度"
+L["BUTTON_HEIGHT_DESC"] = "調整 ChatBar 按鈕著色方塊的高度"
 L["RESET_ALL"] = "重置所有設定"
 L["RESET_ALL_DESC"] = "將所有設定恢復預設值"
 L["CONFIRM_RESET_ALL"] = "確定要重置所有設定嗎？"
@@ -87,6 +91,9 @@ L["DBM_PULL_SECONDS_DESC"] = "設定 DBM 開怪倒數秒數（右鍵）"
 
 -- Dialogs
 L["CONFIRM_RELOAD"] = "確定要重新載入介面嗎？"
+
+-- Skip Reload Confirm
+L["SKIP_RELOAD_CONFIRM"] = "重載介面不需要確認"
 
 
 

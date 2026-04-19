@@ -29,6 +29,7 @@ rsync -av --exclude='.*' \
       --exclude='*.zip' \
       --exclude='__MACOSX' \
       --exclude='logo.png' \
+      --exclude='README.md' \
       . "$BUILD_DIR/$ADDON_NAME" > /dev/null
 
 # Replace placeholder {version} with actual version in TOC

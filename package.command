@@ -3,7 +3,7 @@
 # MiliUI_ChatBar 自動同步 + 打包 + 上傳腳本
 # 雙擊執行，輸入版本號（格式 1.0.0）後：
 #   1. 先更新遊戲目錄 MiliUI_ChatBar.toc 的 ## Version，並在該 repo 單獨 commit + 打 tag
-#   2. 從遊戲目錄同步 MiliUI_ChatBar 到本專案（本專案是平鋪結構，插件檔案直接放在根目錄）
+#   2. 從遊戲目錄複製 MiliUI_ChatBar 覆蓋本專案的資料夾
 #   3. 更新本專案 MiliUI_ChatBar.toc 的 ## Version
 #   4. git commit（訊息就是版本號）+ 打 tag
 #   5. 打包成 MiliUI_ChatBar_<版本>.zip 並上傳
@@ -38,55 +38,18 @@ UI_ID="${ADDON_NAME}"
 
 ADDON_DIR="MiliUI_ChatBar"
 LAST_VER_FILE=".last_version"
-TOC_FILES="MiliUI_ChatBar.toc"
+TOC_FILES="MiliUI_ChatBar/MiliUI_ChatBar.toc"
 SOURCE_DIR="/Applications/World of Warcraft/_retail_/Interface/AddOns/MiliUI_ChatBar"
-SOURCE_TOC="${SOURCE_DIR}/MiliUI_ChatBar.toc"
-
-# 只屬於本專案、不是插件內容的檔案：同步時不會被刪、打包時不會放進去
-# 開頭的 / 代表只比對根目錄（Libs/MiliUIWidgets/README.md 是插件內容，要照常同步與打包）
-REPO_ONLY=(
-    --exclude='/.git'
-    --exclude='/.gitignore'
-    --exclude='/.gitattributes'
-    --exclude='/.env'
-    --exclude='/.last_version'
-    --exclude='/.vscode'
-    --exclude='/package.command'
-    --exclude='/package.sh'
-    --exclude='/README.md'
-    --exclude='/logo.png'
-    --exclude='/*.zip'
-)
-# macOS 垃圾：不從遊戲目錄帶過來、也不放進壓縮檔
-JUNK=(
-    --exclude='.DS_Store'
-    --exclude='._*'
-    --exclude='luac.out'
-    --exclude='__MACOSX'
-)
-
-is_version() {
-    echo "$1" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'
-}
-
-toc_version() {
-    grep -m1 '^## Version:' "$1" 2>/dev/null \
-        | sed -E 's/^## Version:[[:space:]]*//' | tr -d '[:space:]'
-}
 
 # === 取得上次輸入的版本（優先讀記錄檔，其次由 .toc 反推） ===
-# 本專案舊的 .toc 是 {version} 佔位符，反推不到時改讀遊戲目錄那份
 DEFAULT_VER=""
 if [ -f "${LAST_VER_FILE}" ]; then
     DEFAULT_VER=$(head -1 "${LAST_VER_FILE}" | tr -d '[:space:]')
 fi
-if ! is_version "${DEFAULT_VER}"; then
-    DEFAULT_VER=$(toc_version "${TOC_FILES}")
+if [ -z "${DEFAULT_VER}" ]; then
+    DEFAULT_VER=$(grep -m1 '^## Version:' "${TOC_FILES}" 2>/dev/null \
+        | sed -E 's/^## Version:[[:space:]]*//' | tr -d '[:space:]')
 fi
-if ! is_version "${DEFAULT_VER}"; then
-    DEFAULT_VER=$(toc_version "${SOURCE_TOC}")
-fi
-is_version "${DEFAULT_VER}" || DEFAULT_VER=""
 
 # === 互動：版本號 ===
 echo "================================================"
@@ -111,7 +74,7 @@ if [ -z "${VER}" ]; then
     exit 1
 fi
 
-if ! is_version "${VER}"; then
+if ! echo "${VER}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
     echo "❌ 版本號格式錯誤: ${VER}（必須是 1.0.0 這種三段數字）"
     read -p "按 Enter 關閉..."
     exit 1
@@ -153,6 +116,7 @@ if [ ! -d "${SOURCE_DIR}" ]; then
 fi
 
 # === 先更新遊戲目錄的版本號，並在該 repo 單獨 commit ===
+SOURCE_TOC="${SOURCE_DIR}/MiliUI_ChatBar.toc"
 if [ ! -f "${SOURCE_TOC}" ]; then
     echo "❌ 找不到 ${SOURCE_TOC}"
     read -p "按 Enter 關閉..."
@@ -192,22 +156,28 @@ else
 fi
 echo ""
 
-echo "📥 從遊戲目錄同步 MiliUI_ChatBar..."
+echo "📥 從遊戲目錄複製 MiliUI_ChatBar..."
 echo "   ${SOURCE_DIR}"
 
-# 本專案的插件檔案直接放在根目錄，沒辦法像子資料夾那樣整包刪掉重來；
-# 改用 rsync --delete 鏡射：遊戲目錄沒有的檔案會被刪掉，REPO_ONLY 那幾個不受影響
-rsync -a --delete "${REPO_ONLY[@]}" "${JUNK[@]}" "${SOURCE_DIR}/" ./
+# 先刪掉本地的資料夾，再整包複製過來（確保內容完全等同遊戲目錄）
+if [ -d "${ADDON_DIR}" ]; then
+    rm -rf "${ADDON_DIR}"
+    echo "🗑️ 已刪除本地舊的 ${ADDON_DIR} 資料夾"
+fi
+
+cp -R "${SOURCE_DIR}" "${ADDON_DIR}"
 if [ $? -ne 0 ] || [ ! -f "${TOC_FILES}" ]; then
-    echo "❌ 同步失敗！（${TOC_FILES} 不存在）"
+    echo "❌ 複製失敗！（${TOC_FILES} 不存在）"
     read -p "按 Enter 關閉..."
     exit 1
 fi
-echo "✅ 同步完成"
+echo "✅ 複製完成"
 
-# === 清掉 macOS 垃圾（本專案裡殘留的；.git 不碰）===
-find . -path ./.git -prune -o \( -name '.DS_Store' -o -name '._*' -o -name 'luac.out' \) -type f -exec rm -f {} + 2>/dev/null
-echo "🧹 已清除 .DS_Store / ._ 檔 / luac.out"
+# === 清掉 macOS 垃圾（避免壓縮時產生 __MACOSX / ._ 檔）===
+find "${ADDON_DIR}" \( -name '.DS_Store' -o -name '._*' -o -name 'luac.out' \) -delete 2>/dev/null
+rm -rf "${ADDON_DIR}/__MACOSX"
+xattr -cr "${ADDON_DIR}" 2>/dev/null
+echo "🧹 已清除 .DS_Store / ._ 檔 / luac.out / 延伸屬性"
 echo ""
 
 # === 更新 .toc 的版本號 ===
@@ -247,18 +217,12 @@ fi
 # === 打包 ===
 FILENAME="MiliUI_ChatBar_${VER}.zip"
 FILEPATH="/tmp/${FILENAME}"
-BUILD_DIR=$(mktemp -d "/tmp/${ADDON_DIR}_build.XXXXXX")
 
 echo ""
 echo "📦 正在打包 MiliUI_ChatBar..."
 rm -f "${FILEPATH}"
-
-# 根目錄是平鋪的，先把插件內容複製到暫存的 MiliUI_ChatBar/ 底下，壓縮檔頂層才會是插件資料夾
-rsync -a "${REPO_ONLY[@]}" "${JUNK[@]}" ./ "${BUILD_DIR}/${ADDON_DIR}/"
-xattr -cr "${BUILD_DIR}/${ADDON_DIR}" 2>/dev/null
 # -X = 不寫入 macOS 延伸屬性／資源分支，避免解壓出 __MACOSX
-(cd "${BUILD_DIR}" && zip -rqX "${FILEPATH}" "${ADDON_DIR}" -x "*.DS_Store" "*/._*" "__MACOSX/*")
-rm -rf "${BUILD_DIR}"
+zip -rqX "${FILEPATH}" "${ADDON_DIR}" -x "*.DS_Store" "*/._*" "__MACOSX/*"
 
 if [ ! -f "${FILEPATH}" ]; then
     echo "❌ 打包失敗！"
@@ -275,8 +239,8 @@ if [ "${TOP_LEVEL}" != "${ADDON_DIR}" ]; then
     read -p "按 Enter 關閉..."
     exit 1
 fi
-if ! unzip -Z1 "${FILEPATH}" | grep -qx "${ADDON_DIR}/${TOC_FILES}"; then
-    echo "❌ 壓縮檔內找不到 ${ADDON_DIR}/${TOC_FILES}"
+if ! unzip -Z1 "${FILEPATH}" | grep -qx "${TOC_FILES}"; then
+    echo "❌ 壓縮檔內找不到 ${TOC_FILES}"
     rm -f "${FILEPATH}"
     read -p "按 Enter 關閉..."
     exit 1

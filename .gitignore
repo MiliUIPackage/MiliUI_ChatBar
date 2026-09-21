@@ -3,3 +3,7 @@
 .svn
 *.bak
 *.toc_
+.env
+.last_version
+*.zip
+.vscode/
